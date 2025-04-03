@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Хеш-таблиця для дат народження</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="section">
+    <h2>Додати нового користувача</h2>
+    <form id="personForm">
+      <label for="name">Ім'я:</label>
+      <input type="text" id="name" required>
+      
+      <label for="birthDate">Дата народження (ДД.ММ):</label>
+      <input type="text" id="birthDate" placeholder="15.01" required>
+      
+      <button type="submit">Додати</button>
+    </form>
+  </div>
+  
+  <div class="section">
+    <h2>Редагувати користувача</h2>
+    <form id="editForm">
+      <label for="editName">Ім'я для редагування:</label>
+      <input type="text" id="editName" required>
+      
+      <label for="newBirthDate">Нова дата народження (ДД.ММ):</label>
+      <input type="text" id="newBirthDate" placeholder="15.01" required>
+      
+      <button type="submit">Редагувати</button>
+    </form>
+  </div>
+  
+  <div class="section">
+    <h2>Видалити користувача</h2>
+    <form id="deleteForm">
+      <label for="deleteName">Ім'я для видалення:</label>
+      <input type="text" id="deleteName" required>
+      
+      <button type="submit">Видалити</button>
+    </form>
+  </div>
+  
+  <div class="section">
+    <h2>Знайти користувача</h2>
+    <form id="findForm">
+      <label for="findName">Ім'я для пошуку:</label>
+      <input type="text" id="findName" required>
+      
+      <button type="submit">Знайти</button>
+    </form>
+  </div>
+  
+  <div class="section">
+    <h2>Перевірка за місяцем</h2>
+    <form id="monthForm" style="display: flex; flex-direction: column; gap: 10px;">
+      <label for="month">Введіть місяць (ММ):</label>
+      <input type="text" id="month" placeholder="01" required>
+      <button type="button" id="checkMonth">Перевірити дні народження</button>
+    </form>
+  </div>
+  
+  <div class="section button-group">
+    <button id="showTable">Показати хеш-таблицю</button>
+    <button id="clearTable">Очистити таблицю</button>
+  </div>
+  
+  <h2 style="text-align: center;">Результати</h2>
+  <pre id="results"></pre>
+  
+  <script type="module" src="./script.js"></script>
+</body>
+</html>

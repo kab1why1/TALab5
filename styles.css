@@ -1,0 +1,85 @@
+/* Загальні стилі */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1e1e1e;
+    margin: 0;
+    padding: 20px;
+    color: #ddd;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #f1c40f;
+    margin-bottom: 10px;
+}
+
+/* Контейнер для секцій */
+.section {
+    background: #2c2c2c;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    margin: 15px auto;
+    max-width: 500px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+label {
+    font-weight: bold;
+    color: #f1c40f;
+}
+
+input[type="text"] {
+    padding: 8px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #333;
+    color: #ddd;
+}
+
+button {
+    padding: 8px;
+    background: #f1c40f;
+    border: none;
+    color: #1e1e1e;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background: #d4ac0d;
+    transform: scale(1.05);
+}
+
+pre {
+    background: #333;
+    padding: 12px;
+    border-radius: 6px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-width: 500px;
+    margin: 15px auto;
+    color: #f1c40f;
+}
+
+/* Кнопки в окремій секції */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.button-group button {
+    flex: 1;
+    min-width: 120px;
+}
