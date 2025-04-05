@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Управління датами народження</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles2.css">
+</head>
+<body>
+  <div class="container">
+
+    <form id="birthForm">
+      <input type="text" id="name" placeholder="Ім'я" required>
+      <input type="date" id="birthdate" required>
+      <button type="submit" id="submitBtn">Додати</button>
+      <button type="button" id="cancelEditBtn" style="display:none;">Скасувати</button>
+    </form>
+
+    <div class="controls">
+      <input type="text" id="searchName" placeholder="Пошук за ім'ям">
+      <button id="searchBtn">Знайти</button>
+    </div>
+
+    <div class="controls">
+      <input type="month" id="monthPicker">
+      <button id="monthCheckBtn">Перевірити місяць</button>
+    </div>
+
+    <div id="message"></div>
+
+    <ul id="entryList"></ul>
+
+    <button id="generateBtn">Згенерувати таблиці</button>
+    <div id="tables"></div>
+  </div>
+
+  <script src="./script2.js">
+  </script>
+</body>
+</html>
