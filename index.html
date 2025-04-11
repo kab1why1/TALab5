@@ -2,73 +2,93 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <title>Хеш-таблиця для дат народження</title>
+  <title>Менеджер студентів</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <div class="section">
-    <h2>Додати нового користувача</h2>
-    <form id="personForm">
-      <label for="name">Ім'я:</label>
-      <input type="text" id="name" required>
-      
-      <label for="birthDate">Дата народження (ДД.ММ):</label>
-      <input type="text" id="birthDate" placeholder="15.01" required>
-      
-      <button type="submit">Додати</button>
-    </form>
+  <div class="container">
+    <section>
+      <h2>Додати студента</h2>
+      <label>Ім'я: <input type="text" id="nameInput"></label>
+      <label>Дата народження: <input type="date" id="dobInput"></label>
+      <button id="addButton">Додати</button>
+    </section>
+
+    <!-- Пошук за ім'ям -->
+    <section>
+      <h2>Пошук за ім'ям</h2>
+      <label>Ім'я: <input type="text" id="searchInput"></label>
+      <button id="searchButton">Знайти</button>
+      <ul id="searchResults"></ul>
+    </section>
+
+    <!-- Фільтр за місяцем -->
+    <section>
+      <h2>Дні народження за місяцем</h2>
+      <label>Місяць:
+        <select id="monthSelect">
+          <option value="1">Січень</option>
+          <option value="2">Лютий</option>
+          <option value="3">Березень</option>
+          <option value="4">Квітень</option>
+          <option value="5">Травень</option>
+          <option value="6">Червень</option>
+          <option value="7">Липень</option>
+          <option value="8">Серпень</option>
+          <option value="9">Вересень</option>
+          <option value="10">Жовтень</option>
+          <option value="11">Листопад</option>
+          <option value="12">Грудень</option>
+        </select>
+      </label>
+      <button id="filterButton">Показати</button>
+      <ul id="monthResults"></ul>
+    </section>
+
+    <!-- Відображення хеш‑таблиць -->
+    <section>
+      <h2>Хеш‑таблиці</h2>
+      <div>
+        <h3>Метод ділення</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Бакет (Місяць)</th>
+              <th>Студенти (ключ та хеш)</th>
+            </tr>
+          </thead>
+          <tbody id="divisionBody"></tbody>
+        </table>
+        <!-- Видалення за хешем (ділення) -->
+        <div style="margin-top: 10px;">
+          <label>Введіть хеш (0-11): 
+            <input type="number" id="deleteDivisionHash" min="0" max="11">
+          </label>
+          <button id="deleteDivisionButton">Видалити за хешем (ділення)</button>
+        </div>
+      </div>
+      <div style="margin-top: 20px;">
+        <h3>Метод множення</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Бакет (Місяць)</th>
+              <th>Студенти (ключ та хеш)</th>
+            </tr>
+          </thead>
+          <tbody id="multiplicationBody"></tbody>
+        </table>
+        <!-- Видалення за хешем (множення) -->
+        <div style="margin-top: 10px;">
+          <label>Введіть хеш (0-11): 
+            <input type="number" id="deleteMultiplicationHash" min="0" max="11">
+          </label>
+          <button id="deleteMultiplicationButton">Видалити за хешем (множення)</button>
+        </div>
+      </div>
+    </section>
   </div>
-  
-  <div class="section">
-    <h2>Редагувати користувача</h2>
-    <form id="editForm">
-      <label for="editName">Ім'я для редагування:</label>
-      <input type="text" id="editName" required>
-      
-      <label for="newBirthDate">Нова дата народження (ДД.ММ):</label>
-      <input type="text" id="newBirthDate" placeholder="15.01" required>
-      
-      <button type="submit">Редагувати</button>
-    </form>
-  </div>
-  
-  <div class="section">
-    <h2>Видалити користувача</h2>
-    <form id="deleteForm">
-      <label for="deleteName">Ім'я для видалення:</label>
-      <input type="text" id="deleteName" required>
-      
-      <button type="submit">Видалити</button>
-    </form>
-  </div>
-  
-  <div class="section">
-    <h2>Знайти користувача</h2>
-    <form id="findForm">
-      <label for="findName">Ім'я для пошуку:</label>
-      <input type="text" id="findName" required>
-      
-      <button type="submit">Знайти</button>
-    </form>
-  </div>
-  
-  <div class="section">
-    <h2>Перевірка за місяцем</h2>
-    <form id="monthForm" style="display: flex; flex-direction: column; gap: 10px;">
-      <label for="month">Введіть місяць (ММ):</label>
-      <input type="text" id="month" placeholder="01" required>
-      <button type="button" id="checkMonth">Перевірити дні народження</button>
-    </form>
-  </div>
-  
-  <div class="section button-group">
-    <button id="showTable">Показати хеш-таблицю</button>
-    <button id="clearTable">Очистити таблицю</button>
-  </div>
-  
-  <h2 style="text-align: center;">Результати</h2>
-  <pre id="results"></pre>
-  
-  <script type="module" src="./script.js"></script>
+
+  <script src="./script.js"></script>
 </body>
 </html>
