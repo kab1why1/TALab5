@@ -1,85 +1,75 @@
-/* Загальні стилі */
-body {
+ /* Використання CSS змінних для темного режиму */
+ :root {
+    --bg-color: #121212;
+    --container-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --accent-color: #bb86fc;
+    --button-bg: #3a3a3a;
+    --button-hover: #505050;
+    --border-color: #333;
+    --input-bg: #2a2a2a;
+  }
+  body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #1e1e1e;
     margin: 0;
     padding: 20px;
-    color: #ddd;
-}
-
-h1, h2 {
-    text-align: center;
-    color: #f1c40f;
-    margin-bottom: 10px;
-}
-
-/* Контейнер для секцій */
-.section {
-    background: #2c2c2c;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 15px;
-    margin: 15px auto;
-    max-width: 500px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-label {
-    font-weight: bold;
-    color: #f1c40f;
-}
-
-input[type="text"] {
-    padding: 8px;
-    border: 1px solid #555;
-    border-radius: 4px;
-    background: #333;
-    color: #ddd;
-}
-
-button {
-    padding: 8px;
-    background: #f1c40f;
-    border: none;
-    color: #1e1e1e;
-    font-weight: bold;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-}
-
-button:hover {
-    background: #d4ac0d;
-    transform: scale(1.05);
-}
-
-pre {
-    background: #333;
-    padding: 12px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--container-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+  h1, h2, h3 {
+    margin-top: 0;
+    color: var(--accent-color);
+  }
+  section {
+    margin-bottom: 30px;
+  }
+  label {
+    margin-right: 10px;
+  }
+  input, select, button {
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
     border-radius: 6px;
-    overflow: auto;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    max-width: 500px;
-    margin: 15px auto;
-    color: #f1c40f;
-}
-
-/* Кнопки в окремій секції */
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    font-size: 14px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+  }
+  button {
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  button:hover {
+    background-color: var(--button-hover);
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
     margin-top: 10px;
-}
-
-.button-group button {
-    flex: 1;
-    min-width: 120px;
-}
+    font-size: 14px;
+  }
+  th, td {
+    border: 1px solid var(--border-color);
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--input-bg);
+  }
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  li {
+    padding: 4px 0;
+  }

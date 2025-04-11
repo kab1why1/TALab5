@@ -1,254 +1,177 @@
-// Person.js (імпровізовано у цьому ж файлі)
-class Person {
-    constructor(name, birthDate) {
-      this.name = name;
-      this.birthDate = birthDate;
-    }
+// Константи
+const m = 12;
+const A = (Math.sqrt(5) - 1) / 2;
+const monthNames = ['1','2','3','4','5','6',
+                    '7','8','9','10','11','12'];
+
+// Окремі колекції студентів для кожної таблиці
+let divisionStudents = [];
+let multiplicationStudents = [];
+
+// Перетворення "YYYY-MM-DD" -> числовий ключ у форматі YYYYMMDD
+function getKey(dob) {
+  const [year, month, day] = dob.split('-').map(Number);
+  return year * 10000 + month * 100 + day;
+}
+
+// Функції хешування:
+// Витягуємо місяць з ключа та повертаємо (місяць - 1)
+function hashDivision(key) {
+  const str = key.toString().padStart(8, '0');
+  const month = Number(str.substring(4, 6));
+  return month % m;
+}
+function hashMultiplication(key) {
+  const str = key.toString().padStart(8, '0');
+  const month = Number(str.substring(4, 6));
+  return Math.floor(m * ((month * A) % 1));
+}
+
+// Оновити вміст таблиці для методу ділення
+function updateDivisionTable() {
+  const divBody = document.getElementById('divisionBody');
+  divBody.innerHTML = '';
+  // Створюємо бакети для таблиці ділення
+  const buckets = Array.from({length: m}, () => []);
+  divisionStudents.forEach(student => {
+    // Використовуємо оновлений хеш, який гарантує відповідність місяцю народження
+    const index = hashDivision(student.key);
+    buckets[index].push(student);
+  });
+  for (let i = 0; i < m; i++) {
+    // Замінюємо кому на розрив рядка для кращого читання
+    const names = buckets[i]
+      .map(s => `${s.name} (ключ: ${s.key}, хеш: ${hashDivision(s.key)})`)
+      .join('<br>');
+    const tr = `<tr>
+                  <td>${monthNames[i]}</td>
+                  <td>${names || '-'}</td>
+                </tr>`;
+    divBody.insertAdjacentHTML('beforeend', tr);
   }
-  
-  // TableHistory.js (імпровізовано у цьому ж файлі)
-  class TableHistory {
-    constructor() {
-      this.actions = [];
-    }
-    
-    addAction(action) {
-      const time = new Date().toLocaleTimeString();
-      this.actions.push(`[${time}] ${action}`);
-    }
-    
-    getHistory() {
-      return this.actions.join("\n");
-    }
+}
+
+// Оновити вміст таблиці для методу множення
+function updateMultiplicationTable() {
+  const mulBody = document.getElementById('multiplicationBody');
+  mulBody.innerHTML = '';
+  // Створюємо бакети для таблиці множення
+  const buckets = Array.from({length: m}, () => []);
+  multiplicationStudents.forEach(student => {
+    const index = hashMultiplication(student.key);
+    buckets[index].push(student);
+  });
+  for (let i = 0; i < m; i++) {
+    // Замінюємо кому на розрив рядка для кращого читання
+    const names = buckets[i]
+      .map(s => `${s.name} (ключ: ${s.key}, хеш: ${hashMultiplication(s.key)})`)
+      .join('<br>');
+    const tr = `<tr>
+                  <td>${monthNames[i]}</td>
+                  <td>${names || '-'}</td>
+                </tr>`;
+    mulBody.insertAdjacentHTML('beforeend', tr);
   }
-  
-  // HashTable.js (реалізація за наданим прикладом)
-  class HashTable {
-    constructor() {
-      this.size = 5;
-      this.table = new Array(this.size).fill(null);
-      this.history = new TableHistory();
-    }
-    
-    hash(key) {
-      let hash = 0;
-      for (let i = 0; i < key.length; i++) {
-        const char = key.charCodeAt(i);
-        hash = (hash << 5) - hash + char;
-      }
-      return Math.abs(hash) % this.size;
-    }
-    
-    get length() {
-      let count = 0;
-      for (const bucket of this.table) {
-        if (bucket !== null) {
-          count += bucket.length;
-        }
-      }
-      return count;
-    }
-    
-    doubleBuckets() {
-      this.size *= 2;
-      const newTable = new Array(this.size).fill(null);
-      for (const bucket of this.table) {
-        if (bucket !== null) {
-          for (const person of bucket) {
-            const index = this.hash(person.name);
-            if (newTable[index] === null) {
-              newTable[index] = [person];
-            } else {
-              newTable[index].push(person);
-            }
-          }
-        }
-      }
-      this.table = newTable;
-    }
-    
-    set(name, birthDate) {
-      const index = this.hash(name);
-      const person = new Person(name, birthDate);
-      if (this.table[index] === null) {
-        this.table[index] = [person];
-        this.history.addAction(`Додано ключ "${name}"`);
-      } else {
-        this.table[index].push(person);
-        this.history.addAction(`Додано ключ "${name}"`);
-      }
-      if (this.length >= this.size) {
-        this.doubleBuckets();
-      }
-      console.log(this.table);
-    }
-    
-    get(name) {
-      const index = this.hash(name);
-      if (this.table[index] !== null) {
-        for (const person of this.table[index]) {
-          if (person && person.name === name) {
-            return person;
-          }
-        }
-      }
-      return null;
-    }
-    
-    remove(name) {
-      const index = this.hash(name);
-      if (this.table[index] !== null) {
-        for (let i = 0; i < this.table[index].length; i++) {
-          if (this.table[index][i] && this.table[index][i].name === name) {
-            this.table[index].splice(i, 1);
-            this.history.addAction(`Видалено ключ "${name}"`);
-            return;
-          }
-        }
-      }
-      throw new Error(`Ключ '${name}' не знайдено в хеш-таблиці`);
-    }
-    
-    edit(name, newBirthDate) {
-      const index = this.hash(name);
-      if (this.table[index] !== null) {
-        for (const person of this.table[index]) {
-          if (person && person.name === name) {
-            person.birthDate = newBirthDate;
-            this.history.addAction(`Відредаговано ключ "${name}"`);
-            return;
-          }
-        }
-      }
-      throw new Error(`Ключ '${name}' не знайдено в хеш-таблиці`);
-    }
-    
-    getPeopleByMonth(month) {
-      const peopleInMonth = [];
-      for (const bucket of this.table) {
-        if (bucket !== null) {
-          for (const person of bucket) {
-            // Припускаємо, що дата народження у форматі "ДД.ММ"
-            if (person && person.birthDate.slice(-2) === month) {
-              peopleInMonth.push(person);
-            }
-          }
-        }
-      }
-      return peopleInMonth;
-    }
-    
-    getBirthdayPerson() {
-      const peopleToday = [];
-      const today = new Date();
-      const todayFormat = String(today.getDate()).padStart(2, '0') + '.' +
-                          String(today.getMonth() + 1).padStart(2, '0');
-      for (const bucket of this.table) {
-        if (bucket !== null) {
-          for (const person of bucket) {
-            if (person && person.birthDate === todayFormat) {
-              peopleToday.push(person);
-            }
-          }
-        }
-      }
-      return peopleToday;
-    }
-    
-    clear() {
-      this.table = new Array(this.size).fill(null);
-      this.history.addAction("Хеш-таблиця повністю очищена");
-    }
+}
+
+// Функція оновлення обох таблиць
+function updateTables() {
+  updateDivisionTable();
+  updateMultiplicationTable();
+}
+
+// Очистити поля вводу
+function clearInputs() {
+  document.getElementById('nameInput').value = '';
+  document.getElementById('dobInput').value = '';
+}
+
+// Додати студента (додається в обидві таблиці)
+function addStudent() {
+  const name = document.getElementById('nameInput').value.trim();
+  const dob   = document.getElementById('dobInput').value;
+  if (!name || !dob) {
+    alert('Будь ласка, заповніть ім’я та дату народження.');
+    return;
   }
-  
-  // Створення об'єкта хеш-таблиці
-  const hashTable = new HashTable();
-  const resultsEl = document.getElementById("results");
-  
-  // Обробник форми додавання нового користувача
-  document.getElementById("personForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const name = document.getElementById("name").value.trim();
-    const birthDate = document.getElementById("birthDate").value.trim();
-    try {
-      hashTable.set(name, birthDate);
-      resultsEl.textContent = `Додано: ${name} з датою народження ${birthDate}\nІсторія дій:\n` +
-                              hashTable.history.getHistory();
-      event.target.reset();
-    } catch (error) {
-      resultsEl.textContent = error.message;
-    }
+  const key = getKey(dob);
+  const student = {name, dob, key};
+
+  divisionStudents.push(student);
+  multiplicationStudents.push(student);
+
+  updateTables();
+  clearInputs();
+}
+
+// Пошук за ім'ям за об'єднаними даними (якщо студент є хоча б в одній таблиці)
+function searchByName() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const ul = document.getElementById('searchResults');
+  ul.innerHTML = '';
+  if (!q) return;
+  // Об'єднуємо студентів з обох таблиць, використовуючи Set для уникнення дублікатів
+  const union = Array.from(new Set([...divisionStudents, ...multiplicationStudents]));
+  const results = union.filter(s => s.name.toLowerCase().includes(q));
+  if (results.length === 0) {
+    ul.innerHTML = '<li>Нічого не знайдено</li>';
+  } else {
+    results.forEach(s => {
+      const li = document.createElement('li');
+      li.textContent = `${s.name} — ${s.dob} (ключ: ${s.key})`;
+      ul.appendChild(li);
+    });
+  }
+}
+
+// Фільтр за місяцем за об'єднаними даними
+function filterByMonth() {
+  const month = Number(document.getElementById('monthSelect').value);
+  const ul = document.getElementById('monthResults');
+  ul.innerHTML = '';
+  const union = Array.from(new Set([...divisionStudents, ...multiplicationStudents]));
+  const results = union.filter(s => {
+    return (new Date(s.dob).getMonth() + 1) === month;
   });
-  
-  // Обробник форми редагування користувача
-  document.getElementById("editForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const name = document.getElementById("editName").value.trim();
-    const newBirthDate = document.getElementById("newBirthDate").value.trim();
-    try {
-      hashTable.edit(name, newBirthDate);
-      resultsEl.textContent = `Відредаговано: ${name} на нову дату ${newBirthDate}\nІсторія дій:\n` +
-                              hashTable.history.getHistory();
-      event.target.reset();
-    } catch (error) {
-      resultsEl.textContent = error.message;
-    }
-  });
-  
-  // Обробник форми видалення користувача
-  document.getElementById("deleteForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const name = document.getElementById("deleteName").value.trim();
-    try {
-      hashTable.remove(name);
-      resultsEl.textContent = `Видалено користувача: ${name}\nІсторія дій:\n` +
-                              hashTable.history.getHistory();
-      event.target.reset();
-    } catch (error) {
-      resultsEl.textContent = error.message;
-    }
-  });
-  
-  // Обробник форми пошуку користувача
-  document.getElementById("findForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const name = document.getElementById("findName").value.trim();
-    const person = hashTable.get(name);
-    if (person) {
-      resultsEl.textContent = `Знайдено користувача: ${person.name} з датою народження ${person.birthDate}`;
-    } else {
-      resultsEl.textContent = `Користувача з ім'ям "${name}" не знайдено.`;
-    }
-    event.target.reset();
-  });
-  
-  // Обробник кнопки для перевірки днів народження за місяцем
-  document.getElementById("checkMonth").addEventListener("click", () => {
-    const month = document.getElementById("month").value.trim();
-    if (month.length !== 2) {
-      resultsEl.textContent = "Будь ласка, введіть місяць у форматі ММ (наприклад, 01, 12)";
-      return;
-    }
-    const people = hashTable.getPeopleByMonth(month);
-    if (people.length > 0) {
-      let message = `У місяці ${month} є наступні дні народження:\n`;
-      people.forEach(person => {
-        message += `${person.name}: ${person.birthDate}\n`;
-      });
-      resultsEl.textContent = message;
-    } else {
-      resultsEl.textContent = `У місяці ${month} немає записаних днів народження.`;
-    }
-  });
-  
-  // Обробник кнопки для відображення хеш-таблиці
-  document.getElementById("showTable").addEventListener("click", () => {
-    resultsEl.textContent = JSON.stringify(hashTable.table, null, 2) +
-                            "\nІсторія дій:\n" + hashTable.history.getHistory();
-  });
-  
-  // Обробник кнопки для очищення хеш-таблиці
-  document.getElementById("clearTable").addEventListener("click", () => {
-    hashTable.clear();
-    resultsEl.textContent = "Хеш-таблиця очищена.\nІсторія дій:\n" + hashTable.history.getHistory();
-  });
+  if (results.length === 0) {
+    ul.innerHTML = '<li>Немає студентів</li>';
+  } else {
+    results.forEach(s => {
+      const li = document.createElement('li');
+      li.textContent = `${s.name} — ${s.dob} (ключ: ${s.key})`;
+      ul.appendChild(li);
+    });
+  }
+}
+
+// Видалення студентів за хешем в таблиці ділення (таблиця множення залишається незмінною)
+function deleteByHashDivision() {
+  const hashValue = Number(document.getElementById('deleteDivisionHash').value);
+  if (isNaN(hashValue) || hashValue < 0 || hashValue >= m) {
+    alert('Введіть коректне значення хешу (від 0 до 11).');
+    return;
+  }
+  divisionStudents = divisionStudents.filter(s => hashDivision(s.key) !== hashValue);
+  updateDivisionTable();
+}
+
+// Видалення студентів за хешем в таблиці множення (таблиця ділення залишається незмінною)
+function deleteByHashMultiplication() {
+  const hashValue = Number(document.getElementById('deleteMultiplicationHash').value);
+  if (isNaN(hashValue) || hashValue < 0 || hashValue >= m) {
+    alert('Введіть коректне значення хешу (від 0 до 11).');
+    return;
+  }
+  multiplicationStudents = multiplicationStudents.filter(s => hashMultiplication(s.key) !== hashValue);
+  updateMultiplicationTable();
+}
+
+// Прив’язка обробників
+document.getElementById('addButton').addEventListener('click', addStudent);
+document.getElementById('searchButton').addEventListener('click', searchByName);
+document.getElementById('filterButton').addEventListener('click', filterByMonth);
+document.getElementById('deleteDivisionButton').addEventListener('click', deleteByHashDivision);
+document.getElementById('deleteMultiplicationButton').addEventListener('click', deleteByHashMultiplication);
+
+// Ініціалізуємо порожні таблиці при завантаженні
+updateTables();
